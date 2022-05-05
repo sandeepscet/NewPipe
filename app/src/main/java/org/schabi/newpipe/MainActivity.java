@@ -94,22 +94,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+public class MainActivity extends AppCompatActivity implements OnAdsClickListener {
     @SuppressWarnings("ConstantConditions")
     public static final boolean DEBUG = !BuildConfig.BUILD_TYPE.equals("release");
-
-    private ActivityMainBinding mainBinding;
-    private DrawerHeaderBinding drawerHeaderBinding;
-    private DrawerLayoutBinding drawerLayoutBinding;
-    private ToolbarLayoutBinding toolbarLayoutBinding;
-
-    private ActionBarDrawerToggle toggle;
-
-    private boolean servicesShown = false;
-
-    private BroadcastReceiver broadcastReceiver;
-
+    private static final String TAG = "MainActivity";
     private static final int ITEM_ID_SUBSCRIPTIONS = -1;
     private static final int ITEM_ID_FEED = -2;
     private static final int ITEM_ID_BOOKMARKS = -3;
@@ -117,8 +105,14 @@ public class MainActivity extends AppCompatActivity {
     private static final int ITEM_ID_HISTORY = -5;
     private static final int ITEM_ID_SETTINGS = 0;
     private static final int ITEM_ID_ABOUT = 1;
-
     private static final int ORDER = 0;
+    private ActivityMainBinding mainBinding;
+    private DrawerHeaderBinding drawerHeaderBinding;
+    private DrawerLayoutBinding drawerLayoutBinding;
+    private ToolbarLayoutBinding toolbarLayoutBinding;
+    private ActionBarDrawerToggle toggle;
+    private boolean servicesShown = false;
+    private BroadcastReceiver broadcastReceiver;
 
     /*//////////////////////////////////////////////////////////////////////////
     // Activity's LifeCycle
@@ -167,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
         // Schedule worker for checking for new streams and creating corresponding notifications
         // if this is enabled by the user.
         NotificationWorker.initialize(this);
+        App.getApp().adsManager.loadAd(this, "ca-app-pub-3940256099942544/1033173712");
+
     }
 
     @Override
@@ -295,7 +291,8 @@ public class MainActivity extends AppCompatActivity {
     private void tabSelected(final MenuItem item) throws ExtractionException {
         switch (item.getItemId()) {
             case ITEM_ID_SUBSCRIPTIONS:
-                NavigationHelper.openSubscriptionFragment(getSupportFragmentManager());
+                App.getApp().adsManager.showInterstitial(this, "sub", "ca-app-pub-3940256099942544/1033173712", this);
+//                NavigationHelper.openSubscriptionFragment(getSupportFragmentManager());
                 break;
             case ITEM_ID_FEED:
                 NavigationHelper.openFeedFragment(getSupportFragmentManager());
@@ -841,5 +838,11 @@ public class MainActivity extends AppCompatActivity {
         final int sheetState = bottomSheetBehavior.getState();
         return sheetState == BottomSheetBehavior.STATE_HIDDEN
                 || sheetState == BottomSheetBehavior.STATE_COLLAPSED;
+    }
+
+    @Override
+    public void onClick(String b) {
+        if (b.equals("sub"))
+            NavigationHelper.openSubscriptionFragment(getSupportFragmentManager());
     }
 }

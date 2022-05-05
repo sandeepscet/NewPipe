@@ -60,6 +60,7 @@ public class App extends MultiDexApplication {
     public static final String PACKAGE_NAME = BuildConfig.APPLICATION_ID;
     private static final String TAG = App.class.toString();
     private static App app;
+    public AdsManager adsManager;
 
     @NonNull
     public static App getApp() {
@@ -77,6 +78,7 @@ public class App extends MultiDexApplication {
         super.onCreate();
 
         app = this;
+        adsManager = new AdsManager();
 
         if (ProcessPhoenix.isPhoenixProcess(this)) {
             Log.i(TAG, "This is a phoenix process! "
@@ -88,8 +90,8 @@ public class App extends MultiDexApplication {
         NewPipeSettings.initSettings(this);
 
         NewPipe.init(getDownloader(),
-            Localization.getPreferredLocalization(this),
-            Localization.getPreferredContentCountry(this));
+                Localization.getPreferredLocalization(this),
+                Localization.getPreferredContentCountry(this));
         Localization.initPrettyTime(Localization.resolvePrettyTime(getApplicationContext()));
 
         StateSaver.init(this);
@@ -216,35 +218,35 @@ public class App extends MultiDexApplication {
         final List<NotificationChannelCompat> notificationChannelCompats = new ArrayList<>();
         notificationChannelCompats.add(new NotificationChannelCompat
                 .Builder(getString(R.string.notification_channel_id),
-                        NotificationManagerCompat.IMPORTANCE_LOW)
+                NotificationManagerCompat.IMPORTANCE_LOW)
                 .setName(getString(R.string.notification_channel_name))
                 .setDescription(getString(R.string.notification_channel_description))
                 .build());
 
         notificationChannelCompats.add(new NotificationChannelCompat
                 .Builder(getString(R.string.app_update_notification_channel_id),
-                        NotificationManagerCompat.IMPORTANCE_LOW)
+                NotificationManagerCompat.IMPORTANCE_LOW)
                 .setName(getString(R.string.app_update_notification_channel_name))
                 .setDescription(getString(R.string.app_update_notification_channel_description))
                 .build());
 
         notificationChannelCompats.add(new NotificationChannelCompat
                 .Builder(getString(R.string.hash_channel_id),
-                        NotificationManagerCompat.IMPORTANCE_HIGH)
+                NotificationManagerCompat.IMPORTANCE_HIGH)
                 .setName(getString(R.string.hash_channel_name))
                 .setDescription(getString(R.string.hash_channel_description))
                 .build());
 
         notificationChannelCompats.add(new NotificationChannelCompat
                 .Builder(getString(R.string.error_report_channel_id),
-                        NotificationManagerCompat.IMPORTANCE_LOW)
+                NotificationManagerCompat.IMPORTANCE_LOW)
                 .setName(getString(R.string.error_report_channel_name))
                 .setDescription(getString(R.string.error_report_channel_description))
                 .build());
 
         notificationChannelCompats.add(new NotificationChannelCompat
                 .Builder(getString(R.string.streams_notification_channel_id),
-                    NotificationManagerCompat.IMPORTANCE_DEFAULT)
+                NotificationManagerCompat.IMPORTANCE_DEFAULT)
                 .setName(getString(R.string.streams_notification_channel_name))
                 .setDescription(getString(R.string.streams_notification_channel_description))
                 .build());
